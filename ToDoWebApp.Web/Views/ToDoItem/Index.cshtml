@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ToDoItem>
+
+
+<h1>ToDo App</h1>
+<form id="addTodoForm" asp-controller="ToDoItem" asp-action="AddTodo" method="post">
+    <input id="title" type="text" name="title"/>
+    <button type="submit">Add ToDo</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+		    <th>Completed</th>
+            <th>Modify</th>
+		</tr>
+	</thead>
+  
+    <tbody id="todo-table">
+    @if (Model != null)
+    {
+        @foreach (var item in Model)
+        {
+            {
+            <tr>
+                <td>@item.Title</td>
+                <td>
+                    <div>
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <input type="hidden" name="completed" id="completed_@item.Id" value="@item.Completed"/>
+                        <input type="checkbox" id="checkbox_@item.Id" onchange="toggleTodo('@item.Id')" @if (item.Completed)
+                        {
+                            <text>checked</text>
+                        }/>
+                    </div>
+                </td>
+                <td>
+                     <form asp-controller="ToDoItem" asp-action="DeleteTodo" method="get">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit">Delete</button>
+                     </form>
+                </td>
+            </tr>
+            }
+        
+        }
+    }
+    </tbody>
+
+</table>
+
+<script>
+
+    function toggleTodo(itemId) {
+        var checkbox = document.getElementById("checkbox_" + itemId);
+        var completedInput = document.getElementById("completed_" + itemId);
+
+        completedInput.value = checkbox.checked;
+
+        var formData = new FormData();
+        formData.append("id", itemId);
+        formData.append("completed", checkbox.checked);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/ToDoItem/ToggleTodo", true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log("Toggle request successful");
+            } else {
+                console.error("Toggle request failed");
+            }
+        };
+        xhr.onerror = function () {
+            console.error("Toggle request failed");
+        };
+        xhr.send(formData);
+    }
+</script>
