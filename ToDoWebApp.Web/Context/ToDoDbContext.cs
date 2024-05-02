@@ -5,10 +5,11 @@ namespace ToDoWebApp.Web.Context
 {
     public class ToDoDbContext:DbContext
     {
-        public DbSet<ToDoItem> Todos { get; set; }
         public ToDoDbContext(DbContextOptions<ToDoDbContext>options):base(options)
         {
             
         }
+        
+        public DbSet<ToDoItem> Todos { get; set; }
     }
 }
