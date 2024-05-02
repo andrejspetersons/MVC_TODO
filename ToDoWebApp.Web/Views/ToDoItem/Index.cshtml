@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ToDoItem>
+
+
+<h1>ToDo App</h1>
+<form id="addTodoForm" asp-controller="ToDoItem" asp-action="AddTodo" method="post">
+    <input id="title" type="text" name="title"/>
+    <button type="submit">Add ToDo</button>
+</form>
+ <head>
+	<script src="~/js/togglescript.js"></script>
+</head>
+<body>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+		    <th>Completed</th>
+            <th>Modify</th>
+		</tr>
+	</thead>
+  
+    <tbody id="todo-table">
+    @if (Model != null)
+    {
+        @foreach (var item in Model)
+        {
+            {
+            <tr>
+                <td>@item.Title</td>
+                <td>
+                    <div>
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <input type="hidden" name="completed" id="completed_@item.Id" value="@item.Completed"/>
+                        <input type="checkbox" id="checkbox_@item.Id" onchange="toggleTodo('@item.Id')" @if (item.Completed)
+                        {
+                            <text>checked</text>
+                        }/>
+                        
+                    </div>
+                </td>
+                <td>
+                     <form asp-controller="ToDoItem" asp-action="DeleteTodo" method="get">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit">Delete</button>
+                     </form>
+                </td>
+            </tr>
+            }
+        
+        }
+    }
+    </tbody>
+
+</table>
+</body>
